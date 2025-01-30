@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->execute([$title, $description, $event_date, $event_time, 
                        $location, $max_capacity, $_GET['id']])) {
         $success = 'Event updated successfully';
-        header('Location: ../dashboard.php'); // Redirect to admin dashboard
+        header('Location: ../dashboard.php');
         exit();
         // Refresh event data
         $stmt = $db->prepare("SELECT * FROM events WHERE id = ?");

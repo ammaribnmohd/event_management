@@ -3,11 +3,11 @@ require_once 'config/database.php';
 require_once 'includes/functions.php';
 require_once 'templates/header.php';
 
-// Get and validate sorting parameters
+
 $orderBy = $_GET['sort'] ?? 'event_date';
 $orderDir = $_GET['order'] ?? 'DESC';
 
-// Validate sorting parameters
+
 $allowedColumns = ['title', 'event_date'];
 $allowedDirections = ['ASC', 'DESC'];
 if (!in_array($orderBy, $allowedColumns) || !in_array($orderDir, $allowedDirections)) {
@@ -18,32 +18,48 @@ if (!in_array($orderBy, $allowedColumns) || !in_array($orderDir, $allowedDirecti
 ?>
 
 <div class="container mt-5">
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <h1>Upcoming Events</h1>
-        </div>
-        <div class="col-md-4 text-right">
+<div class="row mb-4">
+    <div class="col-md-8">
+        <h1>Upcoming Events</h1>
+    </div>
+    <div class="col-md-4 text-right">
+        <div class="d-flex justify-content-end gap-2">
             <a href="admin/auth/login.php" class="btn btn-primary">Admin Login</a>
             <a href="admin/auth/register.php" class="btn btn-secondary">Admin Register</a>
         </div>
     </div>
+</div>
 
-    <div class="d-flex gap-2 mb-3 align-items-center">
-    <div class="col-md-4">
+    <div class="row align-items-center mb-3">
+    <!-- Search Bar -->
+    <div class="col-12 col-md-4 mb-2 mb-md-0">
         <input type="text" id="searchEvents" class="form-control" placeholder="Search events by name...">
     </div>
-    <div class="dropdown">
-        <button class="btn btn-primary" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Sort By ▼
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="?sort=title&order=<?= $orderDir ?>">Title</a></li>
-            <li><a class="dropdown-item" href="?sort=event_date&order=<?= $orderDir ?>">Date</a></li>
-        </ul>
+
+    <!-- Sorting Buttons -->
+    <div class="col-12 col-md-8">
+        <div class="row g-2">
+            <div class="col-6 col-md-auto">
+                <div class="dropdown">
+                    <button class="btn btn-primary w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Sort By ▼
+                    </button>
+                    <ul class="dropdown-menu w-100">
+                        <li><a class="dropdown-item" href="?sort=title&order=<?= $orderDir ?>">Title</a></li>
+                        <li><a class="dropdown-item" href="?sort=event_date&order=<?= $orderDir ?>">Date</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Toggle Order Button -->
+            <div class="col-6 col-md-auto">
+                <a href="?sort=<?= $orderBy ?>&order=<?= $orderDir === 'ASC' ? 'DESC' : 'ASC' ?>" 
+                   class="btn btn-primary w-100 text-center">
+                    <?= $orderDir === 'ASC' ? 'Descending' : 'Ascending' ?>
+                </a>
+            </div>
+        </div>
     </div>
-    <a href="?sort=<?= $orderBy ?>&order=<?= $orderDir === 'ASC' ? 'DESC' : 'ASC' ?>" class="btn btn-primary">
-        <?= $orderDir === 'ASC' ? 'Descending' : 'Ascending' ?>
-    </a>
 </div>
 
     <div class="row">
@@ -87,15 +103,13 @@ if (!in_array($orderBy, $allowedColumns) || !in_array($orderDir, $allowedDirecti
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize dropdowns
+    
     var dropdownButton = document.getElementById('dropdownMenuButton');
     if(dropdownButton) {
         dropdownButton.addEventListener('click', function() {
             var dropdownMenu = this.nextElementSibling;
             dropdownMenu.classList.toggle('show');
         });
-
-        // Close dropdown when clicking outside
         document.addEventListener('click', function(e) {
             if (!dropdownButton.contains(e.target)) {
                 var dropdownMenu = dropdownButton.nextElementSibling;
@@ -112,9 +126,9 @@ document.getElementById('searchEvents').addEventListener('input', function (e) {
     document.querySelectorAll('.event-card').forEach(card => {
         const title = card.querySelector('.event-title').textContent.toLowerCase();
         if (title.includes(searchTerm)) {
-            card.style.display = 'block'; // Show matching cards
+            card.style.display = 'block'; 
         } else {
-            card.style.display = 'none'; // Hide non-matching cards
+            card.style.display = 'none'; 
         }
     });
 });

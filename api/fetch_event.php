@@ -1,20 +1,19 @@
 <?php
-// Turn off error reporting for the API endpoint
 error_reporting(0);
 ini_set('display_errors', 0);
 
 require_once '../config/database.php';
 require_once '../includes/functions.php';
 
-// Set JSON content type header
+//JSON content type header
 header('Content-Type: application/json');
 
-// Handle CORS if needed
+
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET');
 header('Access-Control-Allow-Headers: Content-Type');
 
-// Initialize response array
+
 $response = [
     'success' => false,
     'data' => null,
@@ -47,11 +46,9 @@ try {
         throw new Exception('Event not found');
     }
 
-    // Add registration status using max_capacity instead of capacity
     $event['is_full'] = isEventFull($_GET['id']);
     $event['spots_remaining'] = $event['max_capacity'] - $event['current_attendees'];
 
-    // Remove sensitive fields if any
     unset($event['admin_notes']);
 
     $response['success'] = true;
@@ -65,5 +62,4 @@ try {
     $response['error'] = 'Database error occurred';
 }
 
-// Output JSON response
 echo json_encode($response);

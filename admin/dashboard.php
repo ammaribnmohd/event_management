@@ -9,11 +9,11 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-// Get and validate sorting parameters
+
 $orderBy = $_GET['sort'] ?? 'event_date';
 $orderDir = $_GET['order'] ?? 'DESC';
 
-// Validate sorting parameters
+
 $allowedColumns = ['title', 'event_date'];
 $allowedDirections = ['ASC', 'DESC'];
 if (!in_array($orderBy, $allowedColumns) || !in_array($orderDir, $allowedDirections)) {
@@ -23,7 +23,6 @@ if (!in_array($orderBy, $allowedColumns) || !in_array($orderDir, $allowedDirecti
 
 $db = getDBConnection();
 
-// Get events with attendee count
 $stmtEvents = $db->prepare("
     SELECT 
         e.*, 
@@ -36,7 +35,6 @@ $stmtEvents = $db->prepare("
 $stmtEvents->execute();
 $events = $stmtEvents->fetchAll(PDO::FETCH_ASSOC);
 
-// Get all attendees with event information
 $stmtAttendees = $db->prepare("
     SELECT a.*, e.title as event_title, e.event_date, e.location 
     FROM attendees a
@@ -50,11 +48,11 @@ $allAttendees = $stmtAttendees->fetchAll(PDO::FETCH_ASSOC);
 <?php require_once '../templates/header.php'; ?>
 
 <div class="container mt-5 ">
-    <div class="row mb-4">
+    <div class="row">
         <div class="col-md-8">
             <h1>Admin Dashboard</h1>
         </div>
-        <div class="col-md-4 text-right">
+        <div class="col-md-4 d-flex align-items-center gap-2 justify-content-md-end flex-wrap">
             <a href="events/create.php" class="btn btn-success">Create New Event</a>
             <button id="toggleView" class="btn btn-info">View All Attendees</button>
             <a href="auth/logout.php" class="btn btn-danger">Logout</a>
@@ -63,29 +61,40 @@ $allAttendees = $stmtAttendees->fetchAll(PDO::FETCH_ASSOC);
 
     <!-- Events Section -->
     <div id="eventsSection">
-        <h2 class="mb-3">All Events</h2>
-        <div class="row align-items-center mb-3">
-            <div class="col">
-                <div class="d-flex gap-2">
-                    <div class="col-md-4">
-                        <input type="text" id="searchEvents" class="form-control" placeholder="Search events by name...">
-                    </div>
-                    <div class="dropdown">
-                        <button class="btn btn-primary" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            Sort By ▼
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="?sort=title&order=<?= $orderDir ?>">Title</a></li>
-                            <li><a class="dropdown-item" href="?sort=event_date&order=<?= $orderDir ?>">Date</a></li>
-                        </ul>
-                    </div>
-                    <a href="?sort=<?= $orderBy ?>&order=<?= $orderDir === 'ASC' ? 'DESC' : 'ASC' ?>"
-                        class="btn btn-primary">
-                        <?= $orderDir === 'ASC' ? 'Descending' : 'Ascending' ?>
-                    </a>
+    <h2 class="mb-3">All Events</h2>
+    <div class="row align-items-center mb-3">
+    <!-- Search Bar -->
+    <div class="col-12 col-md-4 mb-2 mb-md-0">
+        <input type="text" id="searchEvents" class="form-control" placeholder="Search events by name...">
+    </div>
+
+    <!-- Sorting Buttons -->
+    <div class="col-12 col-md-8">
+        <div class="row g-2">
+            <div class="col-6 col-md-auto">
+                <div class="dropdown">
+                    <button class="btn btn-primary w-100" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Sort By ▼
+                    </button>
+                    <ul class="dropdown-menu w-100">
+                        <li><a class="dropdown-item" href="?sort=title&order=<?= $orderDir ?>">Title</a></li>
+                        <li><a class="dropdown-item" href="?sort=event_date&order=<?= $orderDir ?>">Date</a></li>
+                    </ul>
                 </div>
             </div>
+
+            <!-- Toggle Order Button -->
+            <div class="col-6 col-md-auto">
+                <a href="?sort=<?= $orderBy ?>&order=<?= $orderDir === 'ASC' ? 'DESC' : 'ASC' ?>" 
+                   class="btn btn-primary w-100 text-center">
+                    <?= $orderDir === 'ASC' ? 'Descending' : 'Ascending' ?>
+                </a>
+            </div>
         </div>
+    </div>
+</div>
+
+
 
         <table class="table table-striped mb-5">
             <thead>
@@ -126,7 +135,7 @@ $allAttendees = $stmtAttendees->fetchAll(PDO::FETCH_ASSOC);
         </table>
     </div>
 
-    <!-- Attendees Section (Hidden by default) -->
+    <!-- Attendees Section -->
     <div id="attendeesSection" class="d-none">
         <h2 class="mb-3">All Attendees</h2>
         <div class="col-md-4">
@@ -300,7 +309,6 @@ $allAttendees = $stmtAttendees->fetchAll(PDO::FETCH_ASSOC);
         });
     });
 
-    // Attendee search functionality
     document.getElementById('searchAttendees').addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
         document.querySelectorAll('#attendeesSection tbody tr').forEach(row => {
@@ -309,11 +317,9 @@ $allAttendees = $stmtAttendees->fetchAll(PDO::FETCH_ASSOC);
         });
     });
 
-    // Clear search when switching views
     document.getElementById('toggleView').addEventListener('click', function() {
         document.getElementById('searchEvents').value = '';
         document.getElementById('searchAttendees').value = '';
-        // Show all rows when switching views
         document.querySelectorAll('tbody tr').forEach(row => row.style.display = '');
     });
 </script>
