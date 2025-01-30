@@ -28,7 +28,7 @@ A simple web-based event management system built with PHP, Bootstrap, and MySQL 
 
 1. Clone the repository to your web server directory:
    
-   --> git clone [https://github.com/ammaribnmohd/event-management-system]
+   --> git clone [https://github.com/ammaribnmohd/event_management]
    
 
 
