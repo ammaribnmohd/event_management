@@ -19,5 +19,5 @@ function validateTime($time) {
 }
 
 function validateCapacity($capacity) {
-    return is_numeric($capacity) && $capacity > 0;
+    return is_numeric($capacity) && $capacity >= 1;
 }
