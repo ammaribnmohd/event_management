@@ -54,6 +54,7 @@ A simple web-based event management system built with PHP, Bootstrap, and MySQL 
    - Visit `http://www.ammaribnmohd.free.nf/index.php`
    - Register your admin account
    - Login to your admin account
+   - Default admin created. Username- admin & password- admin
 ## Usage
 
 ### For Attendees
