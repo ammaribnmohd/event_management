@@ -50,14 +50,16 @@ A simple web-based event management system built with PHP, Bootstrap, and MySQL 
    - Visit `http://localhost/event_management/index.php`
    - Register your admin account
    - Use the credentials to login at `http://localhost/event_management/admin/auth/login.php`
-
+5. Live Project: 
+   - Visit `http://www.ammaribnmohd.free.nf/index.php`
+   - Register your admin account
+   - Login to your admin account
 ## Usage
 
 ### For Attendees
 1. Visit the homepage
 2. Browse available events
-3. Click on an event to view details
-4. Fill out the registration form to book the event
+3. Fill out the registration form to book the event
    - Registration will be blocked if event is at maximum capacity
 
 ### For Admins
